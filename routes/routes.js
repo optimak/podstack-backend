@@ -7,7 +7,6 @@ router.get('/', async (_req, res) => {
             .where('country', 'Unknown')
             .update({ country: 'Global' });
         const data = await knex('podstack');
-        console.log(typeof data)
         res.status(200).send(data);
     } catch (err) {
         res.status(400).send(`Error retrieving Podcaster: ${err}`)

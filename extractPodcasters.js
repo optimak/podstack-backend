@@ -1,29 +1,48 @@
+const cron = require('node-cron');
 const { exec } = require('child_process');
 const fs = require('fs');
+const knex = require('knex')(require('./knexfile')); 
 
-const pythonCommand = 'python3'; 
-const pythonScript = './retrieve_podcasters.py'; 
+const pythonCommand = 'python3';
+const pythonScript = './retrieve_podcasters.py';
 
-// Set the PYTHONPATH environment variable to include the site-packages directory
-// process.env.PYTHONPATH = '/Users/chiamakaaghaizu/Library/Python/3.9/lib/python/site-packagespath_to_your_python_lib/site-packages'; // Replace with the path to your Python site-packages directory
-process.env.PYTHONPATH = '/opt/homebrew/lib/python3.10/site-packages'
-// Execute the Python script
-exec(`${pythonCommand} ${pythonScript}`, (error, stdout, stderr) => {
-    if (error) {
-        console.error(`Error executing Python script: ${error.message}`);
-        return;
-    }
-    if (stderr) {
-        console.error(`Python script STDERR: ${stderr}`);
-        return;
-    }
-    fs.writeFile('./seed-data/podcasters.json', stdout, (err) => {
-        if (err) {
-            console.error(`Error writing Python output to file: ${err}`);
+process.env.PYTHONPATH = './venv/lib/python3.10/site-packages';
+
+
+
+// Schedule a cron job to run once every month
+
+cron.schedule('0 0 1 * *', () => {
+    console.log(`Running scheduled task at: ${new Date().toLocaleString()}`);
+
+    // Step 1: Execute the Python script
+    exec(`${pythonCommand} ${pythonScript}`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error executing Python script: ${error.message}`);
             return;
         }
-        console.log('Python output written to podcasters.json');
-    });
+        if (stderr) {
+            console.error(`Python script STDERR: ${stderr}`);
+            return;
+        }
 
-    // console.log(`Python script output: ${stdout}`);
+        // Step 2: Parse JSON data directly from stdout
+        let podcasters;
+        try {
+            podcasters = JSON.parse(stdout); // Parse the JSON output
+        } catch (parseErr) {
+            console.error(`Error parsing JSON data: ${parseErr.message}`);
+            return;
+        }
+
+        // Step 3: Insert the data into the podstack table
+        knex('podstack')
+            .insert(podcasters)
+            .then(() => {
+                console.log('Data successfully inserted into the database.');
+            })
+            .catch((dbErr) => {
+                console.error(`Error inserting data into the database: ${dbErr.message}`);
+            });
+    });
 });
