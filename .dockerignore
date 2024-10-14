@@ -1,0 +1,26 @@
+# Node modules and logs
+node_modules
+npm-debug.log
+yarn-error.log
+venv
+
+# dotenv file (optional, for security reasons)
+.env
+
+# Dockerfile, docker-compose files
+Dockerfile
+docker-compose.yml
+
+# Git files
+.git
+.gitignore
+
+# IDE/editor config files
+.vscode/
+*.swp
+
+# Other
+coverage
+dist
+*.test.js
+*.spec.js
