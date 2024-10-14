@@ -8,7 +8,7 @@ module.exports = {
     database: process.env.DB_NAME,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    port: process.env.PORT,
+    port: process.env.DB_PORT,
     charset: "utf8mb4",  // Set the character set to utf8mb4
     // collation: "utf8mb4_unicode_ci",  // Set the collation to support full Unicode, including emojis
   },
