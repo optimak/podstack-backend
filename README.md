@@ -49,37 +49,17 @@ json
 
 ## Flow  Diagram 
 
-User
- |
- v
-API Client / Browser
- |
- v
-+------------------------+
-| PodStacks Backend      |
-| (Hosted on Render)     |
-+------------------------+
-        |
-        v
-+------------------------+
-| Docker Container       |
-| (Application Code)     |
-+------------------------+
-        |
-        v
-+------------------------+
-| Database               |
-| (Stores Podcaster Data)|
-+------------------------+
-        ^
-        |
-+------------------------+
-| YouTube API            |
-| (Fetches Tech Channels)|
-+------------------------+
+```mermaid
+graph LR
+User -- data request --> Backend{PodStacks' Backend <br> -Hosted on Render-}
+Backend -- data --> User
+Backend --> Docker{Docker Container <br> -Application Code- }
+Database -- data--> Docker
+Docker --data query--> Database{Database <br> -Stores Podcaster Data-}
 
-Legend:
-- Arrows (| and v) represent data flow.
-- Each box represents a major component or service in the system.
+Docker -- scheduled data request --> YouTubeAPI{YouTube API <br> -Fetches Tech Podcast Channels-}
+YouTubeAPI -- data --> Docker
+```
+
 - Data flows from the user request to the backend, where data is processed via the YouTube API, stored in a database, and returned to the user.
 
