@@ -1,6 +1,6 @@
 # PodStacks Backend
 
-PodStacks is a backend service designed to curate and maintain a database of the world's most popular tech podcasters using YouTube API. The service runs on **Render** (not Heroku) and is containerized with Docker for easy deployment.
+PodStacks is a backend service designed to curate and maintain a database of the world's most popular tech podcasters using YouTube API. The service runs on **Render** and is containerized with Docker for easy deployment. It is updated monthly with a data pipeline depicted [below](https://github.com/optimak/podstack-backend?tab=readme-ov-file#flow--diagram).
 
 ---
 
